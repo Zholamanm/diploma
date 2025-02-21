@@ -18,12 +18,13 @@ use App\Http\Controllers\AuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user-info', function (Request $request) {
     return $request->user();
 });
 
 // Employee Routes (Protected)
 Route::middleware('auth:api')->group(function () {
+    Route::get('employees', [EmployeeController::class, 'index']);
     Route::get('employees', [EmployeeController::class, 'index']);
     Route::post('employees', [EmployeeController::class, 'store']);
     Route::get('employees/{employee}', [EmployeeController::class, 'show']);

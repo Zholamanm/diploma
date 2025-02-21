@@ -1,67 +1,92 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, RouterView } from 'vue-router';
+import {checkLocale, requireAuth} from "./router-guards";
 import RegisterPage from '@/views/UserRegister.vue'; 
 import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
-import Dashboard from '@/components/dashboard/Dashboard.vue';
-import ListEmployee  from '@/components/Employee/ListEmployee.vue';
-import EmployeeForm  from '@/components/Employee/EmployeeForm.vue';
+import clientRoutes from "@/router/client";
+import adminRoutes from "@/router/admin";
+
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+    beforeEnter: checkLocale,
   },
   {
     path: '/register',
     name: 'RegisterPage', 
-    component: RegisterPage, 
+    component: RegisterPage,
+    beforeEnter: checkLocale,
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
+    beforeEnter: checkLocale,
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true },
+    path: "/:locale?",
+    component: RouterView,
+    beforeEnter: checkLocale,
+    children: [
+      {
+        path: 'admin',
+        beforeEnter: requireAuth,
+        component: () => import("@/AdminViews/Main.vue"),
+        children: [
+          ...adminRoutes
+        ]
+      },
+      ...clientRoutes,
+      {
+        path: ':pathMatch(.*)*',
+        redirect:'/',
+      }
+    ]
   },
-  {
-    path: '/employee',
-    name: 'ListEmployee',
-    component: ListEmployee,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/employee/add',
-    name: 'AddEmployee',
-    component: EmployeeForm,meta: { requiresAuth: true },
-    props: { isEditing: false }, 
-  },
-  {
-    path: '/employee/edit/:id',
-    name: 'EditEmployee',
-    component: EmployeeForm,meta: { requiresAuth: true },
-    
-    props: route => ({ isEditing: true, id: route.params.id }), }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      setTimeout(() => { //т.к. при первом переходе window.scrollY равен "0", и выходит криво, nextTick не помогает
+        const element = document.querySelector(to.hash);
+        if (element) {
+          const offset = 82; // высота меню
+          const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }, 500);
+    } else if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  }
 });
 
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!localStorage.getItem('token')) {
+//       next('/login');
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
+
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!localStorage.getItem('token')) {
-      next('/login');
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
+  next();
 });
 
 export default router;
