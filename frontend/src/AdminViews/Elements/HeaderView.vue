@@ -12,9 +12,16 @@
         <a href="#" class="nav-link">Contact</a>
       </li>
     </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="" class="nav-link" @click="logout()">Logout</a>
+      </li>
+    </ul>
   </nav>
 </template>
 <script>
+
+import authApi from "@/api/AuthApi";
 
 export default {
   name: 'HeaderView',
@@ -32,8 +39,16 @@ export default {
     toggleSidebar() {
       document.body.classList.toggle('sidebar-collapse');
     },
+    logout() {
+      authApi.logout();
+    },
   },
   mounted() {
   }
 };
 </script>
+<style scoped>
+.main-header{
+  z-index: 0;
+}
+</style>

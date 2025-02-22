@@ -13,9 +13,6 @@ const usersApi = {
     updateItem(id, data) {
         return client.post('/api/users/' + id, data).then(res => res.data);
     },
-    getLawyers(data) {
-        return client.get('/api/users/lawyers', { params: data }).then(res => res.data);
-    },
     updatePersonal(id, data) {
         return client.post('/api/personal/account/update/' + id, data).then(res => res.data);
     }

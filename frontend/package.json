@@ -15,6 +15,7 @@
     "dayjs": "^1.11.13",
     "jquery": "^3.7.1",
     "shufflejs": "^6.1.1",
+    "v3-infinite-loading": "^1.2.2",
     "vue": "^3.2.13",
     "vue-i18n": "^11.1.1",
     "vue-meta": "^2.4.0",

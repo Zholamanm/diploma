@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
-    <header-view></header-view>
-    <sidebar-view></sidebar-view>
+    <header-view v-if="authorized"></header-view>
+    <sidebar-view v-if="authorized"></sidebar-view>
     <RouterView
         v-if="((authorized&&$store.state.user.user) || $route.name=='login')"
         class=""/>
-    <footer-view></footer-view>
+    <footer-view v-if="authorized"></footer-view>
   </div>
 </template>
 
@@ -69,6 +69,46 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 250px;
+}
+body.sidebar-mini.sidebar-collapse .content-wrapper,
+body.sidebar-mini.sidebar-collapse .main-footer,
+body.sidebar-mini.sidebar-collapse .main-header {
+  margin-left: 0rem !important; /* Overrides weaker !important */
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar::before {
+  margin-left: 0 !important;
+  width: 0rem !important;
+}
 
+/* Default Sidebar Styles */
+.main-sidebar {
+  width: 250px;
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Content Wrapper (Ensures Main Content Adjusts) */
+.content-wrapper {
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 250px; /* Default with sidebar */
+}
+
+/* Hide Sidebar Smoothly */
+.hidden-sidebar {
+  width: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Expand Content to Full Width */
+.expanded-content {
+  margin-left: 0 !important;
+}
+
+</style>
+<style scoped>
 </style>

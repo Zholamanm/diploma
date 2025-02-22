@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminRoutes;
+use App\Http\Middleware\Localization;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -53,15 +55,21 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'localization' => Localization::class,
+//        'isAdmin' => IsAdmin::class,
+//        'isLibrarian' => IsLibrarian::class,
+//        'isMember' => IsMember::class,
+        'admin_routes' => AdminRoutes::class,
+        'role' => \App\Http\Middleware\EnsureUserHasRole::class
     ];
 }

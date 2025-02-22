@@ -4,7 +4,7 @@ import store from "../store/index";
 
 const authApi = {
     async login(data) {
-        return await client.post('http://localhost:8000/api/login', data).then(res => {
+        return await client.post('/api/login', data).then(res => {
             this.setAuthorization(data.email, data.password, res.data.token);
             store.commit('setUser', res.data.user);
         });
@@ -23,7 +23,7 @@ const authApi = {
         return localStorage.getItem(LS_TOKEN);
     },
     getMyUser() {
-        return client.get('http://localhost:8000/api/user-info').then(res => {
+        return client.get('/api/user-info').then(res => {
             store.commit('setUser', res.data);
             return res.data;
         });
@@ -36,30 +36,30 @@ const authApi = {
         store.commit('deleteUser');
         // if (bool)
         window.location.reload();
-        // return await client.post('http://localhost:8000/api/logout').then(() => {
+        // return await client.post('/api/logout').then(() => {
 
         // });
     },
 
     register(data) {
-        return client.post('http://localhost:8000/api/register', data).then(res => res.data);
+        return client.post('/api/register', data).then(res => res.data);
     },
 
     getPersonalDataWithApplication() {
-        return client.get('http://localhost:8000/api/personal-data').then(res => res.data);
+        return client.get('/api/personal-data').then(res => res.data);
     },
     updateProfile(data) {
-        return client.post('http://localhost:8000/api/update-profile', data).then(res => res.data);
+        return client.post('/api/update-profile', data).then(res => res.data);
     },
 
     sendCode(data) {
-        return client.post('http://localhost:8000/api/send-restore-code', data).then(res => res.data);
+        return client.post('/api/send-restore-code', data).then(res => res.data);
     },
     confirmSmsCode(data) {
-        return client.post('http://localhost:8000/api/confirm-restore-code', data).then(res => res.data);
+        return client.post('/api/confirm-restore-code', data).then(res => res.data);
     },
     resetPassword(data) {
-        return client.post('http://localhost:8000/api/restore-password', data).then(res => res.data);
+        return client.post('/api/restore-password', data).then(res => res.data);
     }
 };
 
